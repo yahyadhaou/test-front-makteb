@@ -88,7 +88,7 @@ export default function Archive() {
   }, []);
   const getUsersData = () => {
     axios
-      .get(`http://localhost:5000/getdata/1`)
+      .get(`https://test-al-makteb.onrender.com/getdata/${userId}`)
       .then((res) => {
         const userDatas = res.data;
         const filteredUserDatas = userDatas.filter(userData => userData.archives === "true");

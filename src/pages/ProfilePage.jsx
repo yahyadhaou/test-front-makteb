@@ -20,7 +20,7 @@ function ProfilePage() {
   // getData gets all the data about the user
   const getData = () => {
     axios
-      .get(`http://localhost:5000/getUser/1`)
+      .get(`https://test-al-makteb.onrender.com/getUser/${userId}`)
       .then((res) => {
         setUser(res.data);
         console.log(res.data);

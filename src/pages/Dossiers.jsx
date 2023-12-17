@@ -96,7 +96,7 @@ export default function Dossiers() {
   }, []);
   const getUsersData = () => {
     axios
-      .get(`http://localhost:5000/getdata/${userId}`)
+      .get(`https://test-al-makteb.onrender.com/getdata/${userId}`)
       .then((res) => {
         const userDatas = res.data;
         const filteredUserDatas = userDatas.filter(userData => userData.archives === "false");
@@ -159,7 +159,7 @@ export default function Dossiers() {
   const handleSubmit = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/archiver`,
+        `https://test-al-makteb.onrender.com/archiver`,
         { numeroDossier: datatoarchive }
       );
   

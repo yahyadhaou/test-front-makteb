@@ -44,7 +44,7 @@ function UpdateFolderCase() {
   }, []);
   const getUsersData = () => {
     axios
-      .get(`http://localhost:5000/number/${numeroDossier}`)
+      .get(`https://test-al-makteb.onrender.com/number/${numeroDossier}`)
       .then((res) => {
         const userDatas = res.data;
         const usersArray = userDatas.map((userData) => ({
@@ -67,7 +67,6 @@ function UpdateFolderCase() {
           conclusion:userData.conclusion
 
         }));
-        console.log(usersArray,usersArray[0].Matière)
         setUsersData(usersArray);
       })
       .catch((err) => console.log(err));
@@ -75,10 +74,10 @@ function UpdateFolderCase() {
   const handleSubmit = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/updateDetails/${numeroDossier}`,
+        `https://test-al-makteb.onrender.com/updateDetails/${numeroDossier}`,
         formData
       );
-
+console.log(formData,"formData")
       navigate("/dashboard/app");
       console.log(response.data);
     } catch (error) {

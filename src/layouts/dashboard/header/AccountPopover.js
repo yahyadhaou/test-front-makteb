@@ -28,7 +28,7 @@ const navigate=useNavigate()
 
   const getAccountData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/getUser/1`);
+      const response = await axios.get(`https://test-al-makteb.onrender.com/getUser/${userId}`);
       const accountData = response.data;
   
       const updatedAccount = {
