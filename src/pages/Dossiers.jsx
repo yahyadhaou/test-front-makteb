@@ -18,7 +18,6 @@ import {
   TablePagination,
   Dialog,
   DialogTitle,
-  DialogContent,
   DialogActions,
   Button,
 } from '@mui/material';
@@ -139,7 +138,7 @@ export default function Dossiers() {
       setSelectedDossier(numeroDossier);
       setOpenDialog(true);
       console.log(`Selected numeroDossier: ${numeroDossier}`)
-      setDatatoarchive((prevData) => [...prevData, numeroDossier]); // Add the selected numeroDossier to Datatoarchive
+      setDatatoarchive((prevData) => [...prevData, numeroDossier]); 
     } else {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
@@ -148,14 +147,11 @@ export default function Dossiers() {
   
       setDatatoarchive((prevData) =>
         prevData.filter((dossier) => dossier !== numeroDossier)
-      ); // Remove the unselected numeroDossier from Datatoarchive
+      ); 
     }
   
     setSelected(newSelected);
   };
-  const data=()=>{
-    console.log(datatoarchive,"yahya111")
-  }
   const handleSubmit = async () => {
     try {
       const response = await axios.put(
@@ -187,7 +183,7 @@ export default function Dossiers() {
     setOpenDialog(false);
 
     if (isContinue) {
-      // Handle the case when "Continue" button is clicked
+     
       alert(`Continue selected for: ${selectedDossier}`);
     } else {
       // Handle the case when "Navigate" button is clicked
@@ -356,10 +352,9 @@ export default function Dossiers() {
         </Card>
       </Container>
 
-      {/* Dialog to confirm or navigate */}
+      
       <Dialog open={openDialog} onClose={() => handleDialogClose(false)}>
         <DialogTitle>{`Confirm selection for ${selectedDossier}`}</DialogTitle>
-        <DialogContent>{/* You can add additional content here if needed */}</DialogContent>
         <DialogActions>
           <Button onClick={() => handleDialogClose(false)} color="primary">
             Cancel

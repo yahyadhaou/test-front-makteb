@@ -3,7 +3,7 @@ import { filter } from 'lodash';
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import {
-  Card,Table,Stack,Paper,Avatar, Checkbox, TableRow,TableBody, TableCell, Container, Typography, TableContainer, TablePagination,
+  Card,Table,Stack,Paper, Checkbox, TableRow,TableBody, TableCell, Container, Typography, TableContainer, TablePagination,
 } from '@mui/material';
 import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';

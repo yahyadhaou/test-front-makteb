@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
+import { Link, Stack, IconButton, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
 

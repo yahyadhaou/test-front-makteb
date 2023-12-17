@@ -52,10 +52,6 @@ export default function SignInSide() {
       }
     }
   };
-  const  handleClick=()=>{
-    console.log(email,pass)
-  }
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
