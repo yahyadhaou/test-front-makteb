@@ -31,9 +31,10 @@ const getdata = () => {
   const previousMonth = currentMonth - 1 < 1 ? 12 : currentMonth - 1;
   
   axios
-    .get(`http://localhost:5000/getAllAppointmentsForUser/${userId}`)
+    .get(`https://test-al-makteb.onrender.com/getUser/${userId}`)
     .then((res) => {
-      const addresses = res.data.map((contract) => contract.address);
+      const data=res.data
+      const addresses = data.map((contract) => contract.address);
       setAddress(addresses);
 
 
@@ -68,8 +69,7 @@ const getdata = () => {
        const formpercantage=((currentMonthMeeting.length-previousMonthMeeting.length)/previousMonthMeeting.length)*100
        setCurrentMonth(currentMonthMeeting)
        setActiveprcentage(formpercantage)
-      setMeeting(res.data);
-    })
+      setMeeting(res.data); })
     .catch((err) => console.log(err));
 };
 
@@ -91,11 +91,11 @@ const hello = () => {
       
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="عدد القضايا" total="520" icon={'arcticons:opensstpclient'}  onClick={hello}/>
+            <AppWidgetSummary title="عدد القضايا" total={520} icon={'arcticons:opensstpclient'}  onClick={hello}/>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="عدد الموكلين" total="430" color="info" icon={'guidance:meeting-point'} />
+            <AppWidgetSummary title="عدد الموكلين" total={430} color="info" icon={'guidance:meeting-point'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>

@@ -78,7 +78,8 @@ export default function Procedures() {
       .get(`https://test-al-makteb.onrender.com/getdata/${userId}`)
       .then((res) => {
         const userDatas = res.data;
-        const usersArray = userDatas.map((userData) => ({
+        const filteredUserDatas = userDatas.filter(userData => userData.archives === "false");
+        const usersArray = filteredUserDatas.map((userData) => ({
           id: userData.id,
           numeroDossier: userData.numeroDossier,
           demandeur: userData.demandeur,

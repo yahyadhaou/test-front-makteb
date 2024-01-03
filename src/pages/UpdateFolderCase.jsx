@@ -15,7 +15,6 @@ function UpdateFolderCase() {
 
     const userId = localStorage.getItem("id");
     useEffect(() => {
-        // You can log the `numeroDossier` here or perform any other actions with it.
         console.log("Numero Dossier:", numeroDossier);
       }, [numeroDossier]);
       const [usersData, setUsersData] = useState([]);

@@ -15,12 +15,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import bgimg from "./13.jpeg";
+import bgimg from '../assets/13.jpeg'
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
@@ -32,7 +31,7 @@ export default function SignInSide() {
         email,
         pass,
       });
-  
+
       if (user) {
         console.log(user);
         localStorage.setItem('token', user.data.token);
@@ -43,7 +42,7 @@ export default function SignInSide() {
       }
     } catch (error) {
       console.log(error.response);
-  
+
       // Check if the status code is 401
       if (error.response.status === 401) {
         alert('Email or password is incorrect');
@@ -64,8 +63,7 @@ export default function SignInSide() {
           sx={{
             backgroundImage: `url(${bgimg})`,
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -87,10 +85,11 @@ export default function SignInSide() {
               Sign in
             </Typography>
             <Box
-            component="form"
-          noValidate
-          onSubmit={handleSubmit} // Change this line to point to handleSubmit
-          sx={{ mt: 1 }}>
+              component="form"
+              noValidate
+              onSubmit={handleSubmit} // Change this line to point to handleSubmit
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin="normal"
                 required
@@ -100,7 +99,8 @@ export default function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                value={email} onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -112,18 +112,10 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
                 value={pass}
-              onChange={(e) => setPass(e.target.value)}
+                onChange={(e) => setPass(e.target.value)}
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
+              <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Sign In
               </Button>
               <Grid container>

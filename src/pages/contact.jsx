@@ -31,7 +31,6 @@ export default function Meetings() {
     e.preventDefault();
 
     emailjs
-    // here you should put your service from emailjs
       .sendForm('service_crme486', 'template_09bbnap',form.current, 'gpmedy2RKrayyAULB')
       .then((result) => {
         console.log(result.text);

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import { Stack,Typography,} from '@mui/material';
 
 function AddNewfolderPage() {
     const navigate=useNavigate()
@@ -32,17 +32,40 @@ function AddNewfolderPage() {
         Datedujugement: "",
         users_id:userId
       })
-  const [user, setUser] = useState([]);
-  
-useEffect(()=>{
-    console.log(userId)
-})
-const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-  };
+      const [tribunal, setTribunal] = useState('');
+      const [ville,setVille] =useState('')
+      const [Matière,setMatières]=useState('')
+
+    
+      const handleChange = (e) => {
+        setFormData({
+          ...formData,
+          [e.target.id]: e.target.value,
+        });
+      };
+    
+      const handleTribunalChange = (event) => {
+        setTribunal(event.target.value);
+        setFormData({
+          ...formData,
+          Tribunal: event.target.value,
+        });
+      };
+      
+      const handleVilleChange = (event) => {
+        setVille(event.target.value);
+        setFormData({
+          ...formData,
+          ville: event.target.value,
+        });
+      };
+      const handleMatièreChange = (event) => {
+        setMatières(event.target.value);
+        setFormData({
+          ...formData,
+          Matière: event.target.value,
+        });
+      };
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
@@ -53,12 +76,21 @@ const handleChange = (e) => {
       navigate("/dashboard/app")
       console.log(response.data);
     } catch (error) {
-      // Handle errors
+      console.log(formData)
       console.error(error);
     }
   };
+  const yahyacloo=()=>{
+    console.log(formData,"yhayayayyayaya");
+  }
   return  (
     <>
+
+<Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom  style={{ textAlign: 'right', marginLeft: 'auto' }}>
+          إضافة قضية جديدة
+          </Typography>
+        </Stack>
     <Card item xs={12} sm={6}>
              
                 <TextField
@@ -88,33 +120,78 @@ const handleChange = (e) => {
                   fullWidth
                   margin="normal"
                 />
-                <TextField
-                id="Tribunal"
-                  label="المحكمة"
-                  defaultValue="المحكمة"
-                  value={formData.Tribunal}
-                  onChange={handleChange}
-                  fullWidth
-                  margin="normal"
-                />
-                <TextField
-                id="ville"
-                  label="مدينة"
-                  defaultValue="مدينة"
-                  value={formData.ville}
-                  onChange={handleChange}
-                  fullWidth
-                  margin="normal"
-                />
-                <TextField
-                id="Matière"
-                  label="المادة"
-                  defaultValue="المادة"
-                  value={formData.Matière}
-                  onChange={handleChange}
-                  fullWidth
-                  margin="normal"
-                />
+               <FormControl fullWidth margin="normal">
+          <InputLabel id="tribunal-label">المحكمة</InputLabel>
+          <Select
+            labelId="tribunal-label"
+            id="Tribunal"
+            value={tribunal}
+            onChange={handleTribunalChange}
+          >
+            <MenuItem value="التعقيـب">التعقيـب</MenuItem>
+            <MenuItem value="الاستئناف">الاستئناف</MenuItem>
+            <MenuItem value="الإبتدائية"> الإبتدائية</MenuItem>
+            <MenuItem value="الناحية">الناحية</MenuItem>
+            <MenuItem value="العقارية">العقارية</MenuItem>
+            <MenuItem value="الدستورية">الدستورية</MenuItem>
+            <MenuItem value="الإدارية">الإدارية</MenuItem>
+          </Select>
+        </FormControl>
+        
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="ville-label">مدينة</InputLabel>
+          <Select
+            labelId="ville-label"
+            id="ville"
+            value={ville}
+            onChange={handleVilleChange}
+          >
+            <MenuItem value="تونس">تونس </MenuItem>
+            <MenuItem value="تونس 2 ">تونس 2  </MenuItem>
+            <MenuItem value="أريانة">أريانة </MenuItem>
+            <MenuItem value="بن عروس">بن عروس </MenuItem>
+            <MenuItem value="منوبة">منوبة </MenuItem>
+            <MenuItem value="قرمبالية">قرمبالية </MenuItem>
+            <MenuItem value="زغوان">زغوان </MenuItem>
+            <MenuItem value="نابل">نابل </MenuItem>
+            <MenuItem value="بنزرت">بنزرت </MenuItem>
+            <MenuItem value="باجة">باجة </MenuItem>
+            <MenuItem value="الكاف">الكاف </MenuItem>
+            <MenuItem value="جندوبة">جندوبة </MenuItem>
+            <MenuItem value="سليانة">سليانة </MenuItem>
+            <MenuItem value="القصرين">القصرين </MenuItem>
+            <MenuItem value="سوسة">سوسة </MenuItem>
+            <MenuItem value="سوسة 2">سوسة 2 </MenuItem>
+            <MenuItem value="القيروان">القيروان </MenuItem>
+            <MenuItem value="المنستير">المنستير </MenuItem>
+            <MenuItem value="المهدية">المهدية </MenuItem>
+            <MenuItem value="صفاقس">صفاقس </MenuItem>
+            <MenuItem value="صفاقس 2">صفاقس 2 </MenuItem>
+            <MenuItem value="توزر">توزر </MenuItem>
+            <MenuItem value="قابس">قابس </MenuItem>
+            <MenuItem value="قبلي">قبلي </MenuItem>
+            <MenuItem value="مدنين">قفصة </MenuItem>
+            <MenuItem value="تطاوين">تطاوين </MenuItem>
+            <MenuItem value="سيدي بوزيد">سيدي بوزيد</MenuItem>
+
+
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="Matière-label">المادة</InputLabel>
+          <Select
+            labelId="Matière-label"
+            id="Matière"
+            value={Matière}
+            onChange={handleMatièreChange}
+          >
+            <MenuItem value="مدنية">مدنية</MenuItem>
+            <MenuItem value="جناحية">جناحية</MenuItem>
+            <MenuItem value="جزائية"> جزائية</MenuItem>
+            <MenuItem value="شخصية">شخصية</MenuItem>
+          </Select>
+        </FormControl>
                 <TextField
                 id="T"
                   label="ط"

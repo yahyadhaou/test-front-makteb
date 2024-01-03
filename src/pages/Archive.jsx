@@ -2,11 +2,24 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { filter } from 'lodash';
 import axios from 'axios';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  Card,Table,Stack,Paper,Checkbox, TableRow,TableBody, TableCell, 
-  Container, Typography, TableContainer, TablePagination,
-  Dialog, DialogTitle, DialogContent, DialogActions, Button
+  Card,
+  Table,
+  Stack,
+  Paper,
+  Checkbox,
+  TableRow,
+  TableBody,
+  TableCell,
+  Container,
+  Typography,
+  TableContainer,
+  TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Button,
 } from '@mui/material';
 import Scrollbar from '../components/scrollbar';
 import Iconify from '../components/iconify';
@@ -14,10 +27,8 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 
 const TABLE_HEAD = [
   { id: 'numeroDossier', label: 'رقم الملف', alignRight: false },
-  { id: 'Datedujugement', label: 'ت.الحكم', alignRight: false },
-  { id: 'Textedujugement', label: 'نص.الحكم', alignRight: false },
   { id: 'reste', label: 'ماتبقى', alignRight: false },
-  { id: 'honoraires', label:'الاتعاب', alignRight: false },
+  { id: 'honoraires', label: 'الاتعاب', alignRight: false },
   { id: 'nomdudéfendeur', label: 'لقبه او ممثله ', alignRight: false },
   { id: 'Ledéfendeur', label: 'اسم ضد', alignRight: false },
   { id: 'nuLecas', label: 'ع.القظية', alignRight: false },
@@ -53,16 +64,13 @@ function applySortFilter(array, comparator, query) {
   });
 
   if (query) {
-    return filter(array, (_user) =>
-      _user.numeroDossier.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+    return filter(array, (_user) => _user.numeroDossier.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
 
   return stabilizedThis.map((el) => el[0]);
 }
 
-
-export default function Archive() {
+export default function Dossiers() {
   const [openDialog, setOpenDialog] = useState(false);
   const [page, setPage] = useState(0);
   const [selectedDossier, setSelectedDossier] = useState('');
@@ -71,18 +79,17 @@ export default function Archive() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const navigate=useNavigate()
-
- 
+  const [datatoarchive,setDatatoarchive]=useState([])
+  const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
- 
+
   const [usersData, setUsersData] = useState([]);
-  const userId = localStorage.getItem("id");
+  const userId = localStorage.getItem('id');
   useEffect(() => {
     getUsersData();
   }, []);
@@ -91,8 +98,7 @@ export default function Archive() {
       .get(`https://test-al-makteb.onrender.com/getdata/${userId}`)
       .then((res) => {
         const userDatas = res.data;
-        const filteredUserDatas = userDatas.filter(userData => userData.archives === "true");
-  
+        const filteredUserDatas = userDatas.filter(userData => userData.archives === "false");
         const usersArray = filteredUserDatas.map((userData) => ({
           id: userData.id,
           numeroDossier: userData.numeroDossier,
@@ -108,10 +114,7 @@ export default function Archive() {
           Ledéfendeur: userData.Ledéfendeur,
           honoraires: userData.honoraires,
           reste: userData.reste,
-          Datedujugement: userData.Datedujugement,
-          Textedujugement: userData.Textedujugement,
         }));
-  
         console.log(usersArray);
         setUsersData(usersArray);
       })
@@ -134,13 +137,35 @@ export default function Archive() {
       newSelected = newSelected.concat(selected, numeroDossier);
       setSelectedDossier(numeroDossier);
       setOpenDialog(true);
+      console.log(`Selected numeroDossier: ${numeroDossier}`)
+      setDatatoarchive((prevData) => [...prevData, numeroDossier]); 
     } else {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+  
+      setDatatoarchive((prevData) =>
+        prevData.filter((dossier) => dossier !== numeroDossier)
+      ); 
     }
-
+  
     setSelected(newSelected);
   };
-
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.put(
+        `https://test-al-makteb.onrender.com/archiver`,
+        { numeroDossier: datatoarchive }
+      );
+  
+      navigate("/dashboard/Archive");
+      console.log(response.data);
+    } catch (error) {
+      // Handle errors
+      console.error(error);
+    }
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -158,7 +183,7 @@ export default function Archive() {
     setOpenDialog(false);
 
     if (isContinue) {
-      // Handle the case when "Continue" button is clicked
+     
       alert(`Continue selected for: ${selectedDossier}`);
     } else {
       // Handle the case when "Navigate" button is clicked
@@ -167,9 +192,12 @@ export default function Archive() {
     }
   };
 
-  const handelNavigate =()=>{
-    console.log("hello yahya ");
-  }
+  const handelNavigate = () => {
+    navigate('/dashboard/AddNewfolderPage');
+  };
+  const handelnavigate = () => {
+    navigate(`/dashboard/UpdateFolderCase/${selectedDossier}`);
+  };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - usersData.length) : 0;
 
@@ -179,22 +207,28 @@ export default function Archive() {
 
   return (
     <>
-   <Helmet>
-        <title>أرشيف </title>
+      <Helmet>
+        <title>جميع الملفات بالمكتب </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handelNavigate}>
+            إضافة قضية جديدة
+          </Button>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleSubmit}>
+          أرشيف
+          </Button>
           <Typography variant="h4" gutterBottom style={{ textAlign: 'right', marginLeft: 'auto' }}>
-            أرشيف
+            جميع الملفات بالمكتب
           </Typography>
         </Stack>
-        
+
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 950 }}>
+            <TableContainer sx={{ minWidth: 1150 }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -207,7 +241,21 @@ export default function Archive() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, numeroDossier, demandeur, nomdedemandeur, Tribunal, ville, Matière, T, nuLecas, Datedelaudience, reste, honoraires, nomdudéfendeur, Ledéfendeur,Textedujugement,Datedujugement } = row;
+                    const {
+                      id,
+                      numeroDossier,
+                      demandeur,
+                      nomdedemandeur,
+                      Tribunal,
+                      ville,
+                      Matière,
+                      T,
+                      nuLecas,
+                      reste,
+                      honoraires,
+                      nomdudéfendeur,
+                      Ledéfendeur,
+                    } = row;
                     const selectedUser = selected.indexOf(numeroDossier) !== -1;
 
                     return (
@@ -222,23 +270,43 @@ export default function Archive() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{Datedujugement.slice(0, 10)}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{Textedujugement}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{reste}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{honoraires}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{nomdudéfendeur}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{Ledéfendeur}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{nuLecas}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{T}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{Matière}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{ville}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{Tribunal}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{nomdedemandeur}</TableCell>
-                        <TableCell align="left" style={{ fontSize: '18px' }} >{demandeur}</TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {reste}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {honoraires}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {nomdudéfendeur}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {Ledéfendeur}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {nuLecas}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {T}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {Matière}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {ville}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {Tribunal}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {nomdedemandeur}
+                        </TableCell>
+                        <TableCell align="left" style={{ fontSize: '18px' }}>
+                          {demandeur}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
-                 {emptyRows > 0 && (
+                  {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
                     </TableRow>
@@ -255,13 +323,13 @@ export default function Archive() {
                           }}
                         >
                           <Typography variant="h6" paragraph>
-                          غير معثور عليه
+                            غير معثور عليه
                           </Typography>
 
                           <Typography variant="body2">
-                          لا يوجد نتائج ل &nbsp;
+                            لا يوجد نتائج ل &nbsp;
                             <strong>&quot;{filterName}&quot;</strong>.
-                            <br />حاول التحقق من الأخطاء المطبعية أو استخدام الكلمات الكاملة
+                            <br /> حاول التحقق من الأخطاء المطبعية أو استخدام الكلمات الكاملة
                           </Typography>
                         </Paper>
                       </TableCell>
@@ -284,24 +352,32 @@ export default function Archive() {
         </Card>
       </Container>
 
-      {/* Dialog to confirm or navigate */}
+      
       <Dialog open={openDialog} onClose={() => handleDialogClose(false)}>
         <DialogTitle>{`Confirm selection for ${selectedDossier}`}</DialogTitle>
-        <DialogContent>
-          {/* You can add additional content here if needed */}
-        </DialogContent>
         <DialogActions>
           <Button onClick={() => handleDialogClose(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => handleDialogClose(false)} color="primary">
+          <Button
+            onClick={() => {
+              handleDialogClose(false);
+            }}
+            color="primary"
+          >
             Continue
           </Button>
-          <Button onClick={() => handleDialogClose(false)} color="primary">
+          <Button
+            onClick={() => {
+              handleDialogClose(false);
+              handelnavigate(); // Call your second function here
+            }}
+            color="primary"
+          >
             Navigate
           </Button>
         </DialogActions>
       </Dialog>
-      </>
+    </>
   );
 }
