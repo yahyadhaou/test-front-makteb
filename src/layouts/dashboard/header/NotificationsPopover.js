@@ -74,14 +74,19 @@ export default function NotificationsPopover() {
       .get(`https://test-al-makteb.onrender.com/getdatarappeles/${userId}`)
       .then((res) => {
         const userDatas = res.data;
-        console.log(res.data)
-        const usersArray = userDatas.map((userData) => ({
+        
+        
+
+// Reverse the array to get the descending order
+const sortedArray = userDatas.sort((a, b) => b.idrappelles - a.idrappelles);
+console.log(sortedArray,"zhdbzhdzbhzbdhzbdzhhhhhh")
+        const usersArray = sortedArray.map((userData) => ({
           id: userData.idrappelles,
           title: `${userData.title} ${userData.description}`,
           deadline: userData.deadline,
           isUnRead:userData.isUnRead
         }));
-        const yahya = userDatas.map((userData) => {
+        const yahya = sortedArray.map((userData) => {
           const fulldetails = `${userData.title} ${userData.description}`;
           const isUnRead = userData.isUnRead === 'false';
         console.log(isUnRead,"edneineiej")

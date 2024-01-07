@@ -76,18 +76,6 @@ export default function Meetings() {
                     required
                   />
                 </Grid>
-                {/* <Grid xs={12} sm={6} item>
-                  <TextField
-                    name="from_name"
-                    // value={formData.lastName}
-                    // onChange={handleChange}
-                    placeholder="Enter last name"
-                    label="Last Name"
-                    variant="outlined"
-                    fullWidth
-                    required
-                  />
-                </Grid> */}
                 <Grid item xs={12}>
                   <TextField
                     name="reply_to"
@@ -101,19 +89,6 @@ export default function Meetings() {
                     required
                   />
                 </Grid>
-                {/* <Grid item xs={12}>
-                  <TextField
-                    name="message"
-                    // value={formData.phone}
-                    // onChange={handleChange}
-                    type="tel"
-                    placeholder="Enter phone number"
-                    label="Phone"
-                    variant="outlined"
-                    fullWidth
-                    required
-                  />
-                </Grid> */}
                 <Grid item xs={12}>
                   <TextField
                     name="message"

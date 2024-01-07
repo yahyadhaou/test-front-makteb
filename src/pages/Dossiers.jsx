@@ -162,7 +162,6 @@ export default function Dossiers() {
       navigate("/dashboard/Archive");
       console.log(response.data);
     } catch (error) {
-      // Handle errors
       console.error(error);
     }
   };
@@ -185,11 +184,7 @@ export default function Dossiers() {
     if (isContinue) {
      
       alert(`Continue selected for: ${selectedDossier}`);
-    } else {
-      // Handle the case when "Navigate" button is clicked
-      // Navigate to the ProfilePage or perform any other action
-      // Example: history.push('/profile');
-    }
+    } 
   };
 
   const handelNavigate = () => {

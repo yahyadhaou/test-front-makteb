@@ -8,33 +8,22 @@ import {AppCurrentVisits, AppWebsiteVisits,AppWidgetSummary,} from '../sections/
 export default function DashboardAppPage() {
   const theme = useTheme();
   const userId = localStorage.getItem("id");
-const [meeting, setMeeting] = useState([]);
+const [clients, setClients] = useState([]);
 const [address,setAddress]=useState([])
+const [monthlyaudience,setMonthlyaudiance]=useState(0)
+const [cliennts,setCliennts]= useState([])
 const [cuurentmonth, setCurrentMonth] = useState([]);
-const [activeprcentage, setActiveprcentage] = useState(0);
+const [datastat,setDatastat]=useState([])
   const [addressOccurrences, setAddressOccurrences] = useState([])
 useEffect(() => {
   getdata();
 }, []);
-const uahya=[
-  { label: 'تونس', value: 15 },
-  { label: 'سوسة', value: 2 },
-  { label: 'صفاقس ', value: 4 },
-  { label: 'بن عروس ', value: 5 },
-  { label: 'منوبة ', value: 3 },
-  // ... other addresses and their occurrences
-]
 const getdata = () => {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentYear = currentDate.getFullYear();
-  const previousMonth = currentMonth - 1 < 1 ? 12 : currentMonth - 1;
-  
   axios
-    .get(`https://test-al-makteb.onrender.com/getUser/${userId}`)
+    .get(`https://test-al-makteb.onrender.com/getdata/${userId}`)
     .then((res) => {
-      const data=res.data
-      const addresses = data.map((contract) => contract.address);
+      const datas=res.data
+      const addresses = datas.map((contract) => contract.ville);
       setAddress(addresses);
 
 
@@ -51,31 +40,62 @@ const getdata = () => {
       });
 
       setAddressOccurrences(addressCounts);
-      const currentMonthMeeting = res.data.filter((contract) => {
-        const parts = contract.date.split('-');
-        const year = parseInt(parts[2], 10);
-        const month = parseInt(parts[1], 10);
-        
-        return year === currentYear && month === currentMonth;
-      });
-      const previousMonthMeeting =  res.data.filter((contract) => {
-        const parts = contract.date.split('-');
-        const year = parseInt(parts[2], 10);
-        const month = parseInt(parts[1], 10);
-        
-        return year === currentYear && month === previousMonth
-       } );
+      
 
-       const formpercantage=((currentMonthMeeting.length-previousMonthMeeting.length)/previousMonthMeeting.length)*100
-       setCurrentMonth(currentMonthMeeting)
-       setActiveprcentage(formpercantage)
-      setMeeting(res.data); })
+      const clientes = datas.map((Client) => Client.demandeur);
+      setCliennts(clientes);
+
+      const ClientsCounts = [];
+
+      clientes.forEach((Client) => {
+        const existingClient = ClientsCounts.find(
+          (item) => item.label === Client
+        );
+        if (existingClient) {
+          existingClient.value+=1;
+        } else {
+          ClientsCounts.push({ label: Client, value: 1 });
+        }
+      });
+
+      setClients(ClientsCounts);
+
+      const Meeting = datas.map((contract) =>contract.Datedelaudience.slice(5,7));
+     const currentMonthMeeting=[]
+     const months = Array.from({ length: 12 }, (_, index) => (index + 1).toString().padStart(2, '0'));
+
+     Meeting.forEach((address) => {
+       const existingAddress = currentMonthMeeting.find((item) => item.label === address);
+       
+       if (existingAddress) {
+         existingAddress.value += 1;
+       } else {
+         currentMonthMeeting.push({ label: address, value: 1 });
+       }
+     });
+     
+     const result = months.map((month) => {
+       const existingMonth = currentMonthMeeting.find((item) => item.label === month);
+       return existingMonth || { label: month, value: 0 };
+     });
+
+     const valuesArray = result.map((item) => item.value);
+       const numberofmonth = () => {
+        const currentDate = new Date();
+        const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+      
+        const item = currentMonthMeeting.find(entry => entry.label === currentMonth);
+        return item ? item.value : null;
+      };
+      
+       setMonthlyaudiance(numberofmonth)
+       setCurrentMonth(result)
+       setDatastat(valuesArray)
+       })
     .catch((err) => console.log(err));
 };
 
-const hello = () => {
-  console.log(addressOccurrences);
-};
+
       
   return (
     <>
@@ -91,46 +111,47 @@ const hello = () => {
       
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="عدد القضايا" total={520} icon={'arcticons:opensstpclient'}  onClick={hello}/>
+            <AppWidgetSummary title="عدد القضايا" total={cliennts.length} icon={'arcticons:opensstpclient'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="عدد الموكلين" total={430} color="info" icon={'guidance:meeting-point'} />
+            <AppWidgetSummary title="عدد الموكلين" total={clients.length} color="info" icon={'guidance:meeting-point'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="عدد المحاكم" total={8} color="warning" icon={'streamline:computer-logo-paypal-payment-paypal'} />
+            <AppWidgetSummary title="عدد المحاكم" total={addressOccurrences.length} color="warning" icon={'streamline:computer-logo-paypal-payment-paypal'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="عدد القضايا هذا شهر" total={12} color="error" icon={'carbon:event'} />
+            <AppWidgetSummary title="عدد القضايا هذا شهر" total={monthlyaudience} color="error" icon={'carbon:event'} />
           </Grid>
+          
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title=" عدد القضايا"
-              subheader={`${Math.trunc(activeprcentage)}% than last Month`}
+              // subheader={`نطق بالحكم`}
               chartLabels={[
-                '01/02/2023',
-                '02/01/2023',
-                '03/01/2023',
-                '04/01/2023',
-                '05/01/2023',
-                '06/01/2023',
-                '07/01/2023',
-                '08/01/2023',
-                '09/01/2023',
-                '10/01/2023',
-                '11/01/2023',
-                '12/01/2023',
-                "01/01/2024"
+                '01/02/2024',
+                '02/01/2024',
+                '03/01/2024',
+                '04/01/2024',
+                '05/01/2024',
+                '06/01/2024',
+                '07/01/2024',
+                '08/01/2024',
+                '09/01/2024',
+                '10/01/2024',
+                '11/01/2024',
+                '12/01/2024',
+                "01/01/2025"
               ]}
               chartData={[
                 {
                   name: 'Team A',
                   type: 'column',
                   fill: 'solid',
-                  data: [50,23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30,80],
+                  data: datastat,
                 },
               ]}
             />
@@ -139,7 +160,7 @@ const hello = () => {
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
               title="توزيع سكني للمواكلين حسب الماحكم  "
-              chartData={uahya}
+              chartData={addressOccurrences}
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,

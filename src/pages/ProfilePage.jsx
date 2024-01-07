@@ -15,7 +15,6 @@ function ProfilePage() {
     getData();
   }, []);
 
-  // getData gets all the data about the user
   const getData = () => {
     axios
       .get(`https://test-al-makteb.onrender.com/getUser/${userId}`)
@@ -47,10 +46,6 @@ function ProfilePage() {
           Lawyer specialiste in {user.sector}
         </Typography>
       </CardContent>
-      {/* <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions> */}
     </Card>
     <Card item xs={12} sm={6}>
              

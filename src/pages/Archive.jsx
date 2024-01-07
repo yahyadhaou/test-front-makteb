@@ -79,7 +79,7 @@ export default function Dossiers() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [datatoarchive,setDatatoarchive]=useState([])
+  const [datatoarchive, setDatatoarchive] = useState([]);
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
@@ -98,7 +98,7 @@ export default function Dossiers() {
       .get(`https://test-al-makteb.onrender.com/getdata/${userId}`)
       .then((res) => {
         const userDatas = res.data;
-        const filteredUserDatas = userDatas.filter(userData => userData.archives === "false");
+        const filteredUserDatas = userDatas.filter((userData) => userData.archives === 'false');
         const usersArray = filteredUserDatas.map((userData) => ({
           id: userData.id,
           numeroDossier: userData.numeroDossier,
@@ -137,32 +137,25 @@ export default function Dossiers() {
       newSelected = newSelected.concat(selected, numeroDossier);
       setSelectedDossier(numeroDossier);
       setOpenDialog(true);
-      console.log(`Selected numeroDossier: ${numeroDossier}`)
-      setDatatoarchive((prevData) => [...prevData, numeroDossier]); 
+      console.log(`Selected numeroDossier: ${numeroDossier}`);
+      setDatatoarchive((prevData) => [...prevData, numeroDossier]);
     } else {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-  
-      setDatatoarchive((prevData) =>
-        prevData.filter((dossier) => dossier !== numeroDossier)
-      ); 
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+
+      setDatatoarchive((prevData) => prevData.filter((dossier) => dossier !== numeroDossier));
     }
-  
+
     setSelected(newSelected);
   };
   const handleSubmit = async () => {
     try {
-      const response = await axios.put(
-        `https://test-al-makteb.onrender.com/archiver`,
-        { numeroDossier: datatoarchive }
-      );
-  
-      navigate("/dashboard/Archive");
+      const response = await axios.put(`https://test-al-makteb.onrender.com/archiver`, {
+        numeroDossier: datatoarchive,
+      });
+
+      navigate('/dashboard/Archive');
       console.log(response.data);
     } catch (error) {
-      // Handle errors
       console.error(error);
     }
   };
@@ -183,13 +176,8 @@ export default function Dossiers() {
     setOpenDialog(false);
 
     if (isContinue) {
-     
       alert(`Continue selected for: ${selectedDossier}`);
-    } else {
-      // Handle the case when "Navigate" button is clicked
-      // Navigate to the ProfilePage or perform any other action
-      // Example: history.push('/profile');
-    }
+    } 
   };
 
   const handelNavigate = () => {
@@ -217,7 +205,7 @@ export default function Dossiers() {
             إضافة قضية جديدة
           </Button>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleSubmit}>
-          أرشيف
+            أرشيف
           </Button>
           <Typography variant="h4" gutterBottom style={{ textAlign: 'right', marginLeft: 'auto' }}>
             جميع الملفات بالمكتب
@@ -351,8 +339,6 @@ export default function Dossiers() {
           />
         </Card>
       </Container>
-
-      
       <Dialog open={openDialog} onClose={() => handleDialogClose(false)}>
         <DialogTitle>{`Confirm selection for ${selectedDossier}`}</DialogTitle>
         <DialogActions>

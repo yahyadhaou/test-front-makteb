@@ -42,8 +42,6 @@ export default function SignInSide() {
       }
     } catch (error) {
       console.log(error.response);
-
-      // Check if the status code is 401
       if (error.response.status === 401) {
         alert('Email or password is incorrect');
       } else {
@@ -87,7 +85,7 @@ export default function SignInSide() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit} // Change this line to point to handleSubmit
+              onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
               <TextField

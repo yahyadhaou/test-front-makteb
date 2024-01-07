@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
+import { Toolbar, Typography, OutlinedInput, InputAdornment } from '@mui/material';
 // component
 import Iconify from '../../../components/iconify';
 
@@ -65,7 +65,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         />
       )}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <Iconify icon="eva:trash-2-fill" />
@@ -77,7 +77,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
             <Iconify icon="ic:round-filter-list" />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </StyledRoot>
   );
 }

@@ -1,9 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 import {
-  Card,Table,Stack,Paper, Checkbox, TableRow,TableBody, TableCell, Container, Typography, TableContainer, TablePagination,
+  Card,Table,Dialog,
+  DialogTitle,
+  DialogActions,Stack,Paper,Button, Checkbox, TableRow,TableBody, TableCell, Container, Typography, TableContainer, TablePagination,
 } from '@mui/material';
 import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
@@ -55,18 +58,16 @@ function applySortFilter(array, comparator, query) {
 
 
 export default function UserPage() {
-
+  const [openDialog, setOpenDialog] = useState(false);
   const [page, setPage] = useState(0);
-
+  const [selectedDossier, setSelectedDossier] = useState('');
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
+  const [datatoarchive,setDatatoarchive]=useState([])
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const navigate = useNavigate();
 
  
 
@@ -114,18 +115,26 @@ export default function UserPage() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, numeroDossier) => {
+    const selectedIndex = selected.indexOf(numeroDossier);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = newSelected.concat(selected, numeroDossier);
+      setSelectedDossier(numeroDossier);
+      setOpenDialog(true);
+      console.log(`Selected numeroDossier: ${numeroDossier}`)
+      setDatatoarchive((prevData) => [...prevData, numeroDossier]); 
+    } else {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+  
+      setDatatoarchive((prevData) =>
+        prevData.filter((dossier) => dossier !== numeroDossier)
+      ); 
     }
+  
     setSelected(newSelected);
   };
 
@@ -141,6 +150,17 @@ export default function UserPage() {
   const handleFilterByName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
+  };
+  const handleDialogClose = (isContinue) => {
+    setOpenDialog(false);
+
+    if (isContinue) {
+     
+      alert(`Continue selected for: ${selectedDossier}`);
+    } 
+  };
+  const handelnavigate = () => {
+    navigate(`/dashboard/UpdateFolderCase/${selectedDossier}`);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - usersData.length) : 0;
@@ -262,6 +282,32 @@ export default function UserPage() {
           />
         </Card>
       </Container>
+     
+      <Dialog open={openDialog} onClose={() => handleDialogClose(false)}>
+        <DialogTitle>{`Confirm selection for ${selectedDossier}`}</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => handleDialogClose(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleDialogClose(false);
+            }}
+            color="primary"
+          >
+            Continue
+          </Button>
+          <Button
+            onClick={() => {
+              handleDialogClose(false);
+              handelnavigate(); // Call your second function here
+            }}
+            color="primary"
+          >
+            Navigate
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
